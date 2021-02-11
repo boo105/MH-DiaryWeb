@@ -1,0 +1,221 @@
+    <head>
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+
+    <!-- materialize -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="../public/stylesheets/mypage.css" rel="stylesheet" type="text/css">
+
+
+</head>
+<script type="text/javascript">
+    $(document).ready(function (){
+        // 브라우저 기본값을 재정의
+        $('select').formSelect();
+    });
+    // 유효성 검사
+    // 현재 비밀번호 유효성 검사 추가
+    $(function () {
+        $.validator.addMethod(
+            "check",
+            function (value, element) {
+                if(value != document.getElementById('pwdCh').value) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        );
+        //
+        $(".revise-form").validate({
+            rules: {
+                email : {
+                    email:true
+                },
+                pwd : {
+                    required: true,
+                    minlength: 5,
+                    check: true
+                },
+                pwdRe: {
+                    required: true,
+                    minlength: 5,
+                    equalTo: "#pwd"
+                },
+                tel : {
+                    tel : true
+                }
+            },
+            //For custom messages
+            messages: {
+                email :{
+                    email : "유효한 이메일 주소를 입력하세요."
+                },
+                pwd : {
+                    required : "비밀번호를 입력해주세요.",
+                    minlength : "최소 5자리 이상을 입력해주세요.",
+                    check: "이전 비밀번호와 동일합니다."
+                },
+                pwdRe : {
+                    required : "비밀번호를 입력해주세요.",
+                    minlength : "최소 5자리 이상을 입력해주세요.",
+                    equalTo : "비밀번호가 일치하지 않습니다."
+                },
+                tel : {
+                    tel : "휴대전화를 입력해주세요."
+                }
+            },
+            errorElement : 'div',
+            errorPlacement: function(error, element) {
+                var placement = $(element).data('error');
+                if (placement) {
+                    $(placement).append(error)
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+    });
+    // 비밀 번호 수정
+    $(document).ready(function(){
+        $("#btn_pass").on("click",function(e){
+            e.preventDefault();
+            let che = document.getElementById('pwdCh').value;
+            var id = document.getElementById('id').value;
+
+            $.ajax({
+                type: 'post',
+                url: '/passCheck',
+                dataType: 'json',
+                data: {
+                    'che': che,
+                    'id' : id,
+                },
+            }).done(function (json) {
+                    che = json.che;
+
+                    if(che) {
+                        var pa = document.getElementById('pwdCh');
+                        pa.setAttribute('readonly', 'readonly');
+                        var repa = document.getElementById('rePass');
+                        repa.style.display = 'block';
+                        var bt = document.getElementById('pass-btn');
+                        bt.style.display = 'none';
+                    }
+                    else {
+                        alert('비밀번호가 다릅니다.');
+                    }
+                })
+                .fail(function (xhr, status, errorThrown) {
+                    alert('error');
+                });
+        });
+    });
+
+    // 회원 정보 수정  Submit
+    $("#submit").on("click", function () {
+        $(".revise-form").attr("action","/user/mypage");
+    })
+
+    // 회원 탈퇴
+    $(document).ready(function() {
+        $('.btn_out').on("click",function(e){
+            var out = confirm("회원 탈퇴를 하시겠습니까?");
+            // 확인창 동의 시 탈퇴 진행
+            if(out == true) {
+                $(".revise-form").attr("action","/signout1");
+            }
+            // 확인창 취소
+            else e.preventDefault();
+        })
+    })
+
+</script>
+<div class="col s12 z-depth-4 card-panel" id="container-fluid">
+    <div id="back-btn">
+        <button  class="btn-style-1" onclick="location.href='/index'">메인 페이지로 돌아가기</button>
+    </div>
+    <form class="revise-form row" method="post" >
+        <div>
+            <h4 class="title">회 원 정 보</h4>
+        </div>
+        <div class="row margin">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">account_circle</i>
+                <input id="id" name="id" type="text" value="<%=Id%>" readonly>
+                <label for="id">아이디</label>
+            </div>
+        </div>
+        <div class="row margin">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">vpn_key_re</i>
+                <input id="pwdCh" name="pwdCh" type="password" placeholder="현재 비밀번호"/>
+                <label for="pwdCh">현재 비밀번호</label>
+            </div>
+        </div>
+        <div class="row" id="pass-btn">
+            <div class="input-field col s12">
+                <button  id="btn_pass" class="btn btn_pass waves-effect waves-light col s12" >비밀번호 변경</button>
+            </div>
+        </div>
+        <div id="rePass" class="row">
+            <div class=" row margin">
+                <div class="input-field col s12">
+                    <i class="material-icons prefix">vpn_key</i>
+                    <input id="pwd" name="pwd" type="password" />
+                    <label for="pwd">비밀번호</label>
+                </div>
+            </div>
+            <div    class=" row margin" >
+                <div class="input-field col s12">
+                    <i class="material-icons prefix">vpn_key</i>
+                    <input  id="pwdRe" name="pwdRe" type="password" />
+                    <label for="pwdRe">비밀번호 재확인</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row margin">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">account_circle</i>
+                <input id="name" name="name" type="text" value="<%=Name%>" readonly/>
+                <label for="name">이름</label>
+            </div>
+        </div>
+        <div class="row margin">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">wc</i>
+                <input id="sex" name="sex" type="text" value="<%=Sex%>" readonly>
+                <label for="sex">성별</label>
+            </div>
+        </div>
+        <div class="row margin">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">email</i>
+                <input id="email" name="email" type="text" style="cursor: auto;" value="<%=Email%>"  readonly/>
+                <label for="email">Email</label>
+            </div>
+        </div>
+        <div class="row margin">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">tty</i>
+                <input id="tel" name="tel" type="text" style="cursor: auto;" value="<%=Tel%>" />
+                <label for="tel">전화번호</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <button id="submit" type="submit" class="btn waves-effect waves-light col s12" >회원정보 수정</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <button id="signout" class="btn btn_out waves-effect waves-light col s12" >회원 탈퇴</button>
+            </div>
+        </div>
+    </form>
+</div>

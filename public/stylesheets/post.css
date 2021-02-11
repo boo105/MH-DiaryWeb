@@ -1,0 +1,465 @@
+@import url('http://fonts.googleapis.com/earlyaccess/notosanskr.css');
+/* Community와 위치 동일
+#container-post {
+    background-color: transparent;
+    border: none;
+    height: 82vh;
+    width: 1185px;
+    margin: 90px 15% 60px 15%;
+}
+#post-title {
+    position: absolute;
+    font-family: NotoSansCJKkr;
+    height: 62px;
+    font-size: 42px;
+    font-weight: 500;
+}   
+#post-main {
+    height: 700px;
+    width: 1185px;
+    display: inline-block;
+    position: absolute;
+    margin-top:180px;
+}
+*/
+#container-post {
+    height: 82vh;
+    width: 1185px;
+    margin: 0 auto;
+}
+#post-title {
+    position: absolute;
+    font-family: 'Noto Sans KR', sans-serif;
+    height: 62px;
+    font-size: 42px;
+    font-weight: 500;
+    top: 182px
+}
+
+.tit1 {
+    display: inline-block;
+    color: #eeefff;
+}
+.tit2 {
+    display: inline-block;
+    color: #9090ff;
+}
+#post-main {
+    height: 700px;
+    width: 1185px;
+    display: inline-block;
+    position: absolute;
+    margin-top:200px;
+}
+/*  form   */
+#frm1 {
+    display: inline-block;
+    height: 700px;
+    width: 1185px;
+    position: relative;
+
+}
+/* 이미지 첨부  */
+#post-image {
+    border:1px solid gray;
+    box-shadow : rgb(128, 128, 128) 1px 1px 1px 0px;
+    position: absolute;
+    background-color: #ffffff;
+    margin: 0 17px 0 0;
+    width:584px;
+    height:699px;
+}
+#contentView{
+    width:544px;
+    height:431px;
+    margin: 20px 19px 32px 21px;
+    background-color: #f8f8f8;
+}
+#card_image {
+    display: inline-block;
+    width:544px;
+    height:431px;
+    object-fit:contain;
+}
+#upload {
+    position: absolute;
+    width:444px;
+    height:331px;
+    top:70px;
+    left:71px;
+    opacity: 0;
+}
+#image_btn {
+    position: absolute;
+    left:0;
+    bottom:0;
+}
+/*    글 제목     */
+#title {
+    position: absolute;
+    left: 21px;
+    resize:none;
+    border:none;
+    outline: none;
+    width: 524px;
+    height: 41px;
+    opacity: 1;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 28px;
+    text-align: left;
+}
+/*     셀렉트박스     */
+.publicBox {
+    position: absolute;
+    left:3px;
+    bottom: 25px;
+    font-family: Arial;
+    width:120px;
+    font-size: 20px
+}
+.publicBox select {
+    display: none; /*hide original SELECT element:*/
+}
+/*셀렉트 색*/
+.select-selected {
+    background-color: #ffffff;
+}
+/*선택 후 화살표*/
+.select-selected:after {
+    position: absolute;
+    content: "";
+    top: 18px;
+    right: 0;
+    width: 0;
+    height: 0;
+    border: 8px solid transparent;
+    border-color: #000 transparent transparent transparent;
+}
+/*선택 중 화살표*/
+.select-selected.select-arrow-active:after {
+    border-color: transparent transparent #000 transparent;
+    top: 8px;
+}
+.select-items div,.select-selected {
+    color: #000000;
+    padding: 8px 16px;
+    border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+    cursor: pointer;
+    user-select: none;
+    text-align: center;
+}
+/*option 색 :*/
+.select-items {
+    position: absolute;
+    background-color: #ffffff;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    border: 1px solid gray;
+}
+/*hide the items when the select box is closed:*/
+.select-hide {
+    display: none;
+}
+/*마우스오버*/
+.select-items div:hover, .same-as-selected {
+    color: #5c5cfe;
+    font-weight:bold;
+}
+.dd{
+    height: 30px;
+}
+.dd .ddTitle .ddTitleText {
+    padding-left:0;
+    height:30px;
+    background-color: #ffffff;
+}
+.dd .ddChild li {
+    padding:0 0 0 0;
+}
+.dd .ddChild li.selected {
+    background-color: #CCE1FF;
+}
+.custom_dd {
+    width:85px;
+}
+#weatherBox {
+    position: absolute;
+    bottom:22px;
+    left: 125px;
+}
+/*      글 내용     */
+#post-content {
+    display: inline-block;
+    position: relative;
+    left:601px;
+    margin:0;
+    width:584px;
+    height: 603px;
+    background-color: #ffffff;
+    border: 1px solid gray;
+    box-shadow : rgb(128, 128, 128) 1px 1px 1px 0px;
+}
+#post-content textarea {
+    font-family: 'Noto Sans KR', sans-serif;
+    resize:none;
+    margin:25px;
+    width: 534px;
+    height: 553px;
+    border: none;
+    outline: none;
+    font-size: 20px;
+}
+/*    행복지수  */
+.happy-rating { width:205px; }
+.happy-rating,.happy-rating span { display:inline-block; height:39px; overflow:hidden; background:url(./public/images/happy.png)no-repeat; }
+.happy-rating span{ background-position:left bottom; line-height:0; vertical-align:top; }
+.blind {
+    position: absolute;
+    overflow: hidden;
+    margin: -1px;
+    padding: 0;
+    width: 1px;
+    height: 1px;
+    border: none;
+    clip: rect(0, 0, 0, 0);
+}
+.happyRadio {
+    right: 250px;
+    overflow: hidden;
+    height: 40px;
+}
+.happyRadio:after {
+    content: "";
+    display: block;
+    position: relative;
+    z-index: 10;
+    height: 40px;
+    background: url("../images/happy.png")repeat-x 0 0;
+    background-size: contain;
+    pointer-events: none;
+}
+.happyRadio__box {
+    position: relative;
+    z-index: 1;
+    float: left;
+    width: 20px;
+    height: 40px;
+    cursor: pointer;
+}
+#happy_set {
+    position: absolute;
+    right:30px;
+    bottom:25px;
+}
+#happy_set input {
+    height: 0 ;
+    width: 0 ;
+    position: absolute;
+    opacity: 0  ;
+}
+#happy_set input:checked + .happyRadio__img {
+    background-color: #5c5cfe;
+}
+.happyRadio__img {
+    display: block;
+    position: absolute;
+    right: 0;
+    width: 500px;
+    height: 40px;
+    pointer-events: none;
+}
+/*   내용 글자수   */
+#count_div {
+    font-family: 'Noto Sans KR', sans-serif;
+    display: inline-block;
+    position:absolute;
+    right:0;
+    top:-40px;
+    font-size: 25px;
+    color: #ffffff;
+    opacity: 0.8;
+}
+#count_div p {
+    display: inline-block;
+}
+
+#content-btn {
+    position:absolute;
+    bottom: 80px;
+    left:610px;
+}
+#content-btn input {
+    position: absolute;
+    border: none;
+    outline: none;
+    width:584px;
+    height: 80px;
+    font-size: 20px;
+    border: 1px solid gray;
+    box-shadow : rgb(128, 128, 128) 1px 1px 1px 0px;
+    color : #5c5cfe;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+.footer {
+    padding-bottom: 10px;
+}
+#imageFile, #public, #happiness, #author, #end { display:none; }
+
+
+@media screen and (max-device-width: 1600px) {
+    #container-post {
+        content: "notebook";
+        width:672px;
+        height: 69vh;
+    }
+    #post-title {
+        width: 581px;
+        top: 135px;
+        font-size: 25px;
+    }
+    #post-main {
+        height: 398px;
+        width: 672px;
+        margin-top:100px;
+    }
+    #frm1 {
+        height: 398px;
+        width: 672px;
+    }
+    #post-image {
+        width:332px;
+        height:398px;
+    }
+    #contentView{
+        width:307px;
+        height:190px;
+        margin: 14px 7px 18px 13px;
+    }
+    #card_image {
+        width:307px;
+        height:190px;
+    }
+    #upload {
+        width:249px;
+        height:187px;
+    }
+    #count_div {
+        top:-25px;
+        right: 5px;
+        font-size: 15px;
+    }
+    #title {
+        left: 21px;
+        width: 296px;
+        height: 34px;
+        opacity: 1;
+        font-family: NotoSansCJKkr;
+        font-size: 15px;
+        text-align: left;
+    }
+    .publicBox {
+        left:0;
+        bottom: 5px;
+        font-family: Arial;
+        width:84px;
+        font-size: 8px
+    }
+    .select-selected:after {
+        top: 11px;
+    }
+    .select-selected.select-arrow-active:after {
+         top: 2px;
+     }
+    .custom_dd {
+        width:60px;
+    }
+    #weatherBox {
+          bottom:-1px;
+          left: 85px;
+      }
+
+    /*    행복지수  */
+    .happyRadio {
+        right: 250px;
+        overflow: hidden;
+        height: 20px;
+    }
+    .happyRadio:after {
+        content: "";
+        display: block;
+        position: relative;
+        z-index: 10;
+        height: 20px;
+        background: url("../images/happy_s.png")repeat-x 0 0;
+        background-size: contain;
+        pointer-events: none;
+    }
+    .happyRadio__box {
+        position: relative;
+        z-index: 1;
+        float: left;
+        width: 10px;
+        height: 40px;
+        cursor: pointer;
+    }
+    #happy_set {
+        position: absolute;
+        right:10px;
+        bottom:10px;
+    }
+    #happy_set input {
+        height: 0 ;
+        width: 0 ;
+        position: absolute;
+        opacity: 0  ;
+    }
+    #happy_set input:checked + .happyRadio__img {
+        background-color: #5c5cfe;
+    }
+    .happyRadio__img {
+        display: block;
+        position: absolute;
+        right: 0;
+        width: 500px;
+        height: 40px;
+        pointer-events: none;
+    }
+
+    #post-content {
+        left:339px;
+        width:330px;
+        height: 348px;
+    }
+    #post-content textarea {
+        margin:17px;
+        width: 301px;
+        height: 312px;
+        font-size: 13px;
+    }
+    #content-btn {
+        bottom: 45px;
+        left: 346px;
+    }
+    #content-btn input {
+         font-family: 'Noto Sans KR', sans-serif;
+         width: 330px;
+         height: 45px;
+         font-size: 10px;
+        color: #5c5cfe;
+     }
+}
+@media screen and (max-device-width: 1023px) {
+    #container-post {
+        content: "tablet ";
+        height: 0;
+        width:1080px;
+
+    }
+}
+@media screen and (max-device-width: 767px  ) {
+    container-post {
+        content: "mobile";
+    }
+}

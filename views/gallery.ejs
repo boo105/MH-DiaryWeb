@@ -1,0 +1,226 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+    <!-- 외부 플러그인을 이용하기 위한 설정 -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <!-- 플러그인 Import -->
+    <script type="text/javascript" src="../public/javascripts/turn.min.js"></script>
+    <script type="text/javascript" src="../public/javascripts/bootstrap-datepicker.min.js"></script>
+
+    <!-- CSS Import -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css">
+    <link href="../public/javascripts/bootstrap-datepicker.css" rel="stylesheet">
+    <link href="../public/stylesheets/gallery.css" rel="stylesheet">
+</head>
+
+<!-- TurnJS 속성 값 설정 -->
+<script type="text/javascript">
+    var hashPage = {};
+
+    function resize()
+    {
+        $("#flipbook").turn({
+            width: "50vw",
+            height: "62vh",
+            autoCenter: false
+        })
+    }
+    function initGallery() {
+        $(document).ready(function(){
+            resize();
+
+            // AJAX 통신.
+            $.ajax({ url:"/user/gallery", type: "POST"})
+                .done(function (objectData) {
+                    // Object를 JSON으로 파싱.
+                    let jsonData = JSON.stringify(objectData);
+                    jsonData = JSON.parse(jsonData);
+
+                    let pageCnt = jsonData.length;
+
+                    for (i=0; i<pageCnt; i++) {
+                        let myDate = jsonData[i].created;
+
+                        if(myDate.match(/\d+/g)[4] == "00") {
+                            myDate = myDate.match(/\d+/g)[0] + "-" + myDate.match(/\d+/g)[1] + "-" + myDate.match(/\d+/g)[2] + " " + myDate.match(/\d+/g)[3] + ":00";
+                        }
+                        else {
+                            myDate = myDate.match(/\d+/g)[0] + "-" + myDate.match(/\d+/g)[1] + "-" + myDate.match(/\d+/g)[2] + " " + myDate.match(/\d+/g)[3] + ":" +  + myDate.match(/\d+/g)[4];
+                        }
+
+                        let heart = `<div class="happyRadio" id="happy_set">
+                            <label class="happyRadio__box">
+                            <input type="radio" name="happy" ${jsonData[i].happiness >= 0.5 ? 'class="happyfill"' : ''} value="0.5">
+                            <span class="happyRadio__img ${jsonData[i].happiness >= 0.5 ? 'happyfill' : ''}"></span>
+                            </label>
+                            <label class="happyRadio__box">
+                            <input type="radio" name="happy" ${jsonData[i].happiness >= 1.0 ? 'class="happyfill"' : ''} value="1.0">
+                            <span class="happyRadio__img ${jsonData[i].happiness >= 1.0 ? 'happyfill' : ''}"></span>
+                            </label>
+                            <label class="happyRadio__box">
+                            <input type="radio" name="happy" ${jsonData[i].happiness >= 1.5 ? 'class="happyfill"' : ''} value="1.5">
+                            <span class="happyRadio__img ${jsonData[i].happiness >= 1.5 ? 'happyfill' : ''}"></span>
+                            </label>
+                            <label class="happyRadio__box">
+                            <input type="radio" name="happy" ${jsonData[i].happiness >= 2.0 ? 'class="happyfill"' : ''} value="2.0">
+                            <span class="happyRadio__img ${jsonData[i].happiness >= 2.0 ? 'happyfill' : ''}"></span>
+                            </label>
+                            <label class="happyRadio__box">
+                            <input type="radio" name="happy" ${jsonData[i].happiness >= 2.5 ? 'class="happyfill"' : ''} value="2.5">
+                            <span class="happyRadio__img ${jsonData[i].happiness >= 2.5 ? 'happyfill' : ''}"></span>
+                            </label>
+                            <label class="happyRadio__box">
+                            <input type="radio" name="happy" ${jsonData[i].happiness >= 3.0 ? 'class="happyfill"' : ''} value="3.0">
+                            <span class="happyRadio__img ${jsonData[i].happiness >= 3.0 ? 'happyfill' : ''}"></span>
+                            </label>
+                            <label class="happyRadio__box">
+                            <input type="radio" name="happy" ${jsonData[i].happiness >= 3.5 ? 'class="happyfill"' : ''} value="3.5">
+                            <span class="happyRadio__img ${jsonData[i].happiness >= 3.5 ? 'happyfill' : ''}"></span>
+                            </label>
+                            <label class="happyRadio__box">
+                            <input type="radio" name="happy" ${jsonData[i].happiness >= 4.0 ? 'class="happyfill"' : ''} value="4.0">
+                            <span class="happyRadio__img ${jsonData[i].happiness >= 4.0 ? 'happyfill' : ''}"></span>
+                            </label>
+                            <label class="happyRadio__box">
+                            <input type="radio" name="happy" ${jsonData[i].happiness >= 4.5 ? 'class="happyfill"' : ''} value="4.5">
+                            <span class="happyRadio__img ${jsonData[i].happiness >= 4.5 ? 'happyfill' : ''}"></span>
+                            </label>
+                            <label class="happyRadio__box">
+                            <input type="radio" name="happy" ${jsonData[i].happiness >= 5.0 ? 'class="happyfill"' : ''} value="5.0">
+                            <span class="happyRadio__img ${jsonData[i].happiness >= 5.0 ? 'happyfill' : ''}"></span>
+                            </label>
+                            </div>`;
+
+                        let element =
+                            `<div style="position: relative;">
+                                <div class="padding" id="galleryImage"><img id="gallery_img" src="../${jsonData[i].image}"></div>
+                                <div class="padding" id="galleryTitle">${jsonData[i].title}</div>
+                                <div class="padding" id="galleryContent">${jsonData[i].content}</div>
+                                <div class="row padding" id="bottomItem">
+                                    <div class="col-md-4" id="galleryDate">${myDate}</div>
+                                    <div class="col-md-7" id="galleryHappiness">${heart}</div>
+                                    <div class="col-md-1" id="galleryWeather"><img src="../public/images/weather.png" style="height: 3.5vh;"></div>
+                                </div>
+                            </div>`;
+
+                        let keyname = "";
+                        let hashPageItem = myDate.match(/\d+/g)[0] + '/' + myDate.match(/\d+/g)[1] + '/' + myDate.match(/\d+/g)[2];
+
+                        hashPage[keyname + hashPageItem] = i+3;
+                        $('#flipbook').turn('addPage', $(element), i+3);
+                    }
+
+                    var sparePage = `<div></div>`;
+                    var hardPageInner = `<div class="hard" id="secondCover"></hard>`;
+                    var hardPageOuter = `<div class="hard" id="thirdCover"></hard>`;
+
+                    if(pageCnt%2==1) {
+                        $('#flipbook').turn('addPage', $(sparePage), pageCnt+3);
+                        $('#flipbook').turn('addPage', $(hardPageInner), pageCnt+4);
+                        $('#flipbook').turn('addPage', $(hardPageOuter), pageCnt+5);
+                    }
+                    else {
+                        $('#flipbook').turn('addPage', $(hardPageInner), pageCnt+3);
+                        $('#flipbook').turn('addPage', $(hardPageOuter), pageCnt+4);
+                    }
+                })
+                .fail(function (xhr, status, errorThrown) { alert("데이터를 불러오는 데 실패했습니다.") });
+        });
+    }
+
+    initGallery();
+</script>
+
+<style>
+    .dropdown-menu
+    {
+        font-size:15px;
+    }
+
+
+</style>
+
+<!-- DatePicker 속성 값 설정 -->
+<script type="text/javascript">
+    $(function(){
+        $('.input-group.date').datepicker({
+            calendarWeeks: false,
+            todayHighlight: true,
+            format: "yyyy/mm/dd",
+            language: "kr"
+        }).on('changeDate', function(e) {
+            let pickDate = new Date(e.date);
+            let myYear = pickDate.getFullYear();
+            let myMonth = pickDate.getMonth()+1;
+            let myDate = pickDate.getDate();
+
+            if(myMonth < 10) { myMonth = '0' + myMonth };
+            if(myDate < 10 ) { myDate = '0' + myDate };
+
+            let myPickDate = myYear + '/' + myMonth + '/' + myDate;
+
+
+            try {
+                $('#flipbook').turn('page', hashPage[myPickDate]).turn('stop');
+            }
+            catch {
+                alert("지정한 일기를 찾을 수 없습니다.");
+            }
+
+        })
+
+    });
+
+
+</script>
+
+<style>
+    .input-group-addon {
+        padding: 6px 18px;
+        display: flex;
+        justify-content: center;
+    }
+    .form-control {
+        font-size: 16px;
+    }
+    #goToDate {
+        color: white;
+        background-color: #5c5cfe;
+        width: 230px;
+        height: 35px;
+    }
+</style>
+
+<!-- Body -->
+<body>
+<div class="row">
+    <div class="col-md-5 title">
+        <%= user %> 님의 일기
+        <span style="color: #9090ff;"> <%= postNo %> </span>
+    </div>
+    <div class="col-md-1" style="display: flex; align-items: center; margin-top: 60px;">
+        <div class="container">
+            <div class="input-group date">
+                <input type="text" class="form-control" id="pickDate">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar" style="font-size: 16px; margin-left: 4px;"></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2"></div>
+
+</div>
+
+<div class="row">
+    <div class="col-md-12" style="display: flex; justify-content: center; !important">
+        <!-- 표지 -->
+        <div id="flipbook">
+            <div class="hard" id="firstCover"></div>
+            <div class="hard" id="secondCover"></div>
+
+            <!-- initGallery(); -->
+        </div>
+    </div>
+</div>
+</body>
+</html>

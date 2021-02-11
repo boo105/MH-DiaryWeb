@@ -1,0 +1,211 @@
+<link href="../public/stylesheets/detail.css" rel="stylesheet" type="text/css">
+
+<script type="text/javascript">
+
+    // like 한상태
+    function like()
+    {
+        $('#like').hide();
+        $('#unlike').show();
+    }
+
+    // like 안한상태
+    function unlike()
+    {
+        $('#like').show();
+        $('#unlike').hide();
+    }
+
+    // 로그인 검증
+    function checkLogin()
+    {
+        let value_return;
+
+        // 동기적으로 작동됨
+        $.ajax({
+            type:'post',
+            url:'/user',
+            data: {like : "likepage"},
+            async : false,
+            success: function (isLogin) {
+                // 로그인상태라면
+                if(isLogin != false)
+                    value_return = isLogin;
+                else
+                    value_return = false;
+            }
+        });
+        return value_return;
+    }
+
+    let id = checkLogin();
+    let like_count = <%=post.like_count%>;
+
+    // like 상태 확인
+    function checkLike()
+    {
+        // 로그인상태라면
+        if(checkLogin() != false)
+        {
+            $.ajax({
+                type:'get',
+                url:'/community/likeCheck',
+                data: {id : id , bo_no : <%=bo_no%> } ,
+                success: function (data) {
+                    // 좋아요 한 경우
+                    if(data)
+                        like();
+                    else
+                        unlike();
+                }
+            });
+        }
+        else
+            unlike();
+    }
+
+    $(document).ready(function (){
+        let imgs = $('.happyRadio__img');
+        let happy_inputs = $('input');
+        console.log(imgs);
+        console.log(happy_inputs);
+        for(let i=0; i<<%=post.happiness%> * 2; i++)
+        {
+            console.log(imgs[i]);
+            happy_inputs.eq(i).attr('class','happyfill');
+            imgs.eq(i).attr('class','happyfill');
+        }
+
+    });
+
+    $(function (){
+        // 페이지 로드시 like 상태 확인
+        window.onload = checkLike();
+
+        // 좋아요 버튼
+        $('#like').click(function (e) {
+            let id = checkLogin();
+            // 로그인 한 경우
+            if(id != false)
+            {
+                $.ajax({
+                    type : 'post',
+                    url : '/community/like',
+                    data: {id : id , bo_no : <%=bo_no%>},
+                    success : function (data) {
+                        like();
+                        like_count += 1;
+                        $('#like_count_u').text(like_count);
+                    }
+                });
+            }
+            else
+                alert("로그인을 해주세요!");
+        });
+
+        // 좋아요 취소 버튼
+        $('#unlike').click(function (e) {
+            $.ajax({
+                type:'post',
+                url:'/community/unlike',
+                data: {id : id , bo_no : <%=bo_no%>},
+                success: function (data) {
+                    unlike();
+                    like_count -= 1;
+                    $('#like_count').text(like_count);
+                }
+            });
+        });
+    });
+</script>
+
+<div class="container">
+    <div>
+        <button class="txtlink prepage" onclick="window.history.back()">게시물</button>
+        <span class="prepage">></span>
+        <span class="text-style-1">게시물 상세</span>
+    </div>
+    <br>
+    <div class="sad">
+        <button class="txtlink text-style-2" onclick="window.history.back()"><span>< </span>전체 게시물 목록으로 돌아가기</button>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 preview">
+            <div class="img-area">
+                <img class="img" src="../<%= post.image %>">
+            </div>
+            <div class="title"><%= post.title %></div>
+            <div class="row text-area">
+                <div class="col-sm-10">
+                    <span class="author"><%= post.author %></span>
+                    <span class="time"><%= post.created %></span>
+                </div>
+            </div>
+            <img class="weather" src="../public/images/<%=post.weather%>.png">
+        </div>
+
+        <div class="col-md-6">
+            <div class="content">
+                <%= post.content %>
+            </div>
+            <div class="row">
+                <button class="like-btn" id="like">
+                    <img src="../public/images/ico_subscription_b.png" srcset="../public/images/ico_subscription_b@2x.png 2x,../public/images/ico_subscription_b@3x.png 3x" class="ico_subscription_b">
+                    <span id="like_text">좋아요</span>
+                    <span id="like_count" style="color: rgb(255,58,117);"><%= post.like_count %></span>
+                </button>
+                <button class="like-btn" id="unlike">
+                    <img src="../public/images/unlike.png" srcset="../public/images/unlike@2x.png 2x,../public/images/unlike@3x.png 3x" class="ico_subscription_b">
+                    <span id="like_text">좋아요</span>
+                    <span id="like_count_u" style="color: rgb(255,58,117);"><%= post.like_count %></span>
+                </button>
+                <div class="share-btn">
+                    <!-- 행복지수 -->
+                    <div class="happyRadio" id="happy_set">
+                        <label class="happyRadio__box">
+                            <input type="radio" name="happy" value="0.5">
+                            <span class="happyRadio__img"></span>
+                        </label>
+                        <label class="happyRadio__box">
+                            <input type="radio" name="happy" value="1.0">
+                            <span class="happyRadio__img"></span>
+                        </label>
+                        <label class="happyRadio__box">
+                            <input type="radio" name="happy" value="1.5">
+                            <span class="happyRadio__img"></span>
+                        </label>
+                        <label class="happyRadio__box">
+                            <input type="radio" name="happy" value="2.0">
+                            <span class="happyRadio__img"></span>
+                        </label>
+                        <label class="happyRadio__box">
+                            <input type="radio" name="happy" value="2.5">
+                            <span class="happyRadio__img"></span>
+                        </label>
+                        <label class="happyRadio__box">
+                            <input type="radio" name="happy" value="3.0">
+                            <span class="happyRadio__img"></span>
+                        </label>
+                        <label class="happyRadio__box">
+                            <input type="radio" name="happy" value="3.5">
+                            <span class="happyRadio__img"></span>
+                        </label>
+                        <label class="happyRadio__box">
+                            <input type="radio" name="happy" value="4.0">
+                            <span class="happyRadio__img"></span>
+                        </label>
+                        <label class="happyRadio__box">
+                            <input type="radio" name="happy" value="4.5">
+                            <span class="happyRadio__img"></span>
+                        </label>
+                        <label class="happyRadio__box">
+                            <input type="radio" name="happy" value="5.0">
+                            <span class="happyRadio__img"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

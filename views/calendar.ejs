@@ -1,0 +1,183 @@
+<style>
+    table {
+        text-align: center;
+        background-color: white;
+        width: 90%;
+        height: 90%;
+    }
+    th {
+        border-bottom: 1px solid lightgrey;
+        padding-top: 20px;
+        padding-bottom: 10px;
+        font-size: 18px;
+    }
+    td
+    {
+        width: 50px;
+    }
+
+    .size
+    {
+        font-size : 20px;
+    }
+
+    .writed
+    {
+        font-size: 15px;
+        color: #5c5cfe;
+    }
+
+    .back
+    {
+        font-size: 15px;
+        color: white;
+    }
+</style>
+
+<table>
+    <thead>
+    <th colspan="7" style="font-size : 30px;text-align: left;">캘린더</th>
+    <tr><td>ㅤ</td></tr>
+    <tr style="font-weight: bold;">
+        <td><label onclick="loadPrevMonth()" class="size" style="color: grey; cursor: pointer"><</label></td>
+        <td class="size" colspan="2">
+            <span id="year">yyyy년</span>
+            -
+            <span id="month">mm</span></td>
+        <td><label onclick="loadNextMonth()" class="size" style="color: grey; cursor: pointer">></label></td>
+    </tr>
+    <tr>
+        <td colspan="7" style="font-size:15px; font-weight: bold; font-weight:normal; text-align: right;">
+            <span style="font-size:15px;   color: #5c5cfe;">⦁ </span>
+            일기작성됨
+        </td>
+    </tr>
+    <tr><td>ㅤ</td></tr>
+    <tr id="day">
+        <td class="size" style="color: red;">일</td>
+        <td class="size">월</td>
+        <td class="size">화</td>
+        <td class="size">수</td>
+        <td class="size">목</td>
+        <td class="size">금</td>
+        <td class="size" style="color: blue;">토</td>
+    </tr>
+    </thead>
+    <tbody id="calendarBody"></tbody>
+</table>
+
+
+<script>
+    const today = new Date();
+
+    function buildCalendar() {
+
+        let year = document.getElementById("year");
+        let month = document.getElementById("month");
+
+        let current_year = today.getFullYear();
+        let current_month = today.getMonth()+1;
+
+        year.innerHTML = current_year + "";
+        month.innerHTML = current_month + "월";
+
+
+        let calendarBody = document.getElementById("calendarBody");
+
+        let startDay = new Date(today.getFullYear(), today.getMonth(), 1).getDay();
+        let lastDay = new Date(today.getFullYear(), today.getMonth()+1, 0).getDate();
+
+        let row = calendarBody.insertRow(calendarBody.rows.length);
+        let cntDay = 0;
+
+        // 현재 날짜 정보를 라우터로 보내 행복지수를 가져온다.
+        let current = "";
+
+        if (current_month < 10) {
+            current = current_year + '-0' + current_month;
+        }
+        else {
+            current = current_year + '-' +current_month;
+        }
+
+        // AJAX 통신.
+        $.ajax({
+            url:"/user/myDiary",
+            type: "POST",
+            dataType: "JSON",
+            data: {"current": current}
+        })
+            .done(function (json) {
+                let k = 0;
+                for(i=0; i<startDay+lastDay; i++) {
+                    if(i%7 == 1) { row = calendarBody.insertRow(calendarBody.rows.length); }
+
+                    let cell = row.insertCell();
+
+                    if(i<=startDay) { cell.innerHTML = ""; }
+                    else {
+                        cntDay ++;
+                        if(k < json.score.length && Number(json.score[k].day) === cntDay)
+                        {
+                            cell.innerHTML = '<span class="writed">⦁</span><br>' + "<span class='size'>" + cntDay + "</span>";
+                            k++;
+                        }
+                        else
+                            cell.innerHTML = '<span class="back">⦁</span><br>' + "<span class='size'>" + cntDay + "</span>";
+
+                        if (cntDay < 10) {
+                            cell.setAttribute('id', '0'+cntDay+'d');
+                        }
+                        else {
+                            cell.setAttribute('id', cntDay+'d');
+                        }
+                    }
+                }
+
+                let happy_score = json.score;
+
+                for (i=0; i<happy_score.length; i++) {
+                    let cellForHappiness = document.getElementById(happy_score[i].day+'d');
+                    cellForHappiness.setAttribute('class', happy_score[i].score);
+                }
+            })
+            .fail(function (xhr, status, errorThrown) { alert("데이터를 불러오는 데 실패했습니다.") });
+
+
+        // Set ClickEvent
+        $("tbody tr td").click(function() {
+            let year = document.getElementById("year").innerHTML.match(/\d+/g);
+            let month = document.getElementById("month").innerHTML.match(/\d+/g);
+
+            let today = year + "." + month + "." + $(this).text().match(/\d+/g);
+            let daily = document.getElementById("daily");
+            daily.innerHTML = today;
+        })
+    }
+
+
+    function initCalendar() {
+        let calendarBody = document.getElementById("calendarBody");
+
+        while(true) {
+            if (calendarBody.rows.length < 1) { return; }
+            else { calendarBody.deleteRow(calendarBody.rows.length-1); }
+        }
+    }
+
+
+    function loadPrevMonth() {
+        today.setMonth(today.getMonth()-1);
+        initCalendar();
+        buildCalendar();
+    }
+
+    function loadNextMonth() {
+        today.setMonth(today.getMonth()+1);
+        initCalendar();
+        buildCalendar();
+    }
+
+    buildCalendar();
+
+</script>

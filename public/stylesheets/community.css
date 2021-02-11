@@ -1,0 +1,154 @@
+@import url('http://fonts.googleapis.com/earlyaccess/notosanskr.css');
+
+#list
+{
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(3, minmax(300px,1fr));
+    /* minmax 기존은 384px */
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top:120px;
+    max-width: 1800px;
+    grid-auto-rows: 40px;
+}
+
+.item
+{
+    position : relative;
+    display: inline-block;
+    margin:0px 5px 25px 0px;
+    box-shadow: 0 5px 30px 0 rgba(0, 0, 0, 0.04);
+    padding: 20px;
+    padding-bottom: 150px;
+    background-color: rgba(240,240,250,0.95);
+    column-break-inside: avoid;
+}
+
+#list .item img
+{
+    width: 100%;
+}
+
+.text-area
+{
+    position: absolute;
+    width: 100%;
+    bottom: 50px;
+    height: 80px;
+}
+
+.title
+{
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 1.91;
+    letter-spacing: -0.88px;
+    text-align: left;
+    margin-top : 10px;
+    margin-bottom: 30px;
+    color: #202020;
+}
+
+.intro
+{
+    height: 62px;
+    margin: 90px 15% 60px 15%;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size : 42px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.33;
+    letter-spacing: -1.68px;
+    text-align: left;
+    color: #eeefff;
+}
+
+.info
+{
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size : 15px;
+}
+
+.id
+{
+    color: #202020;
+}
+
+.created
+{
+    color: #8e8e8e;
+}
+
+.text-style-1
+{
+    color: #9090ff;
+}
+
+.sort
+{
+    position: absolute;
+    right: 17%;
+    width: 110px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 18px;
+}
+
+.sort select {
+    display: none; /*hide original SELECT element:*/
+}
+
+/*선택 후 화살표*/
+.select-selected:after {
+    position: absolute;
+    content: "";
+    top: 18px;
+    right: 0;
+    width: 0;
+    height: 0;
+    border: 8px solid transparent;
+    border-color: #eeefff transparent transparent transparent;
+}
+/*선택 중 화살표*/
+.select-selected.select-arrow-active:after {
+    border-color: transparent transparent #eeefff transparent;
+    top: 8px;
+}
+/**/
+.select-items div,.select-selected{
+    color: #000000;
+    padding: 8px 16px;
+    border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+    cursor: pointer;
+    user-select: none;
+    text-align: center;
+}
+
+/*셀렉트 색*/
+.select-selected
+{
+    color: #eeefff;
+}
+
+/*option 색 :*/
+.select-items {
+    position: absolute;
+    background-color: #ffffff;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    border: 1px solid gray;
+}
+/*hide the items when the select box is closed:*/
+.select-hide {
+    display: none;
+}
+/*마우스오버*/
+.select-items div:hover, .same-as-selected {
+    color: #5c5cfe;
+    font-weight:bold;
+}
+

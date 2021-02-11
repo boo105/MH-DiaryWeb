@@ -1,0 +1,125 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+
+<head>
+  <!-- 플러그인 Import -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js" integrity="sha512-GsqF810cNwHMCDELTwi3YgWIBwKYQlvC1WTAJ6fk80rtB6zN3IWdpoQujBQCuOMOxXXksEWwE0k4Lrb+N87DZQ==" crossorigin="anonymous"></script>
+  <!-- CSS Import -->
+  <link href="../public/stylesheets/myDiary.css" rel="stylesheet">
+</head>
+
+<style>
+  @import url('http://fonts.googleapis.com/earlyaccess/notosanskr.css');
+
+  .size
+  {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size : 30px;
+  }
+
+  .title
+  {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size : 42px;
+    font-weight: 500;
+    color: #eeefff;
+  }
+</style>
+
+<body>
+
+<% if(pass == false) {%>
+  <script type="text/javascript">
+    alert("로그인을 해주세요!");
+    pass = true;
+  </script>
+<% } %>
+
+<div class="row" id="calendar">
+
+  <div class="row" style="margin-bottom: 20px;">
+    <div class="col-md-2"></div>
+
+    <div class="col-md-8 mb-2" style="text-align: left; color: white; font-size: 28px;">
+      <span class="title" style="font-weight: bold; color : rgb(144,144,255);"><%= user %></span>
+      <span class = "title">님의 캘린더</span>
+    </div>
+
+    <div class="col-md-2"></div>
+  </div>
+
+  <div class="diaryContent">
+    <div class="col-md-2"></div>
+
+    <div class="col-md-5" id="calendarView"><%- include("./calendar") -%></div>
+
+    <div class="col-md-3" id="dailyView">
+      <h5 class="size" id="daily">행복지수</h5>
+      <canvas id="myChart" width="400" height="400"></canvas>
+
+      <button class="size" id="login" type="button" onclick="confirm()">나의 행복지수</button>
+    </div>
+
+    <div class="col-md-2"></div>
+  </div>
+</div>
+
+</body>
+
+<script>
+  let _canvas = document.getElementById("myChart")
+  _canvas.style.display = 'None';
+  _canvas.style.visibility = 'hidden';
+
+  function confirm() {
+    let cntDay = new Array
+    for (i=1; i<=31; i++) {
+      try {
+        if (i<10) { var cntDayItem = document.getElementById('0'+i+'d'); }
+        else { var cntDayItem = document.getElementById(i+'d'); }
+
+        if (cntDayItem.className == 'null') { cntDay.push(0); }
+        else { cntDay.push(cntDayItem.className); }
+      }
+      catch {
+        cntDay.push(0);
+      }
+    }
+
+    // 차트 생성
+    let ctx = document.getElementById("myChart");
+    let myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        datasets: [{
+          label: '행복지수',
+          data: cntDay,
+          backgroundColor: 'rgba(74,74,255,1)',
+        }]
+      },
+      options: {
+        response : false,
+        legend: { display: false },
+        scales: {
+          xAxes: [{
+            gridLines: { display: false}
+          }],
+          yAxes: [{
+            gridLines: { display: false },
+            ticks: { min : 0,
+                     max : 5,
+                     fontSize : 20,
+                     stepSize: 1,}
+          }]
+        }
+      }
+    });
+
+    _canvas.style.display = 'block';
+    _canvas.style.visibility = 'visible';
+  }
+</script>
+
+</html>
+

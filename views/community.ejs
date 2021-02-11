@@ -1,0 +1,236 @@
+<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+<script type="text/javascript" src="../public/javascripts/select.js"></script>
+
+<script type="text/javascript">
+    var page = 1;
+    let sortWay = <%=sort%>;    // 0 최신순 1 조회순
+
+    function resizeGridItem(item)
+    {
+        console.log(item);
+        let grid = document.getElementById("list");
+        let rowHeight = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-auto-rows'));
+        let rowGap = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-row-gap'));
+        console.log(rowHeight);
+        console.log(rowGap);
+        let rowSpan = Math.ceil((item.querySelector('.content').getBoundingClientRect().height+rowGap + 9)/(rowHeight+rowGap)) + 3;
+        item.style.gridRowEnd = "span "+ rowSpan;
+        console.log(rowSpan);
+    }
+
+    function resizeAllGridItems(){
+        let allItems = document.getElementsByClassName('item');
+        for(x=0;x<allItems.length;x++){
+            resizeGridItem(allItems[x]);
+        }
+    }
+
+    function resizeInstance(instance){
+        item = instance.elements[0];
+        resizeGridItem(item);
+    }
+
+    $(function () {
+        // 푸터 제거
+        $('.footer').remove();
+
+        // 처음 페이지 접속시 가져옴
+        getList(page);
+        page++;
+
+        $(window).scroll(function() {
+            // 스크롤이 최하단으로 내려가면 DB값 조회후 page 증가시킴
+            if ($(window).scrollTop() >= $(document).height() - $(window).height()) {
+                getList(page);
+                page++;
+                console.log("page :  " +page);
+            }
+        });
+        // 처음 윈도우 로드시 전체 아이템 resize 해줌
+        window.onload = resizeAllGridItems();
+        window.addEventListener("resize", resizeAllGridItems);
+    });
+
+    // 정렬
+    function selectSortWay(way)
+    {
+        window.location.href='/community?sort=' + way;
+    }
+
+    function getList(page)
+    {
+        $.ajax({
+            type : 'POST',
+            dataType : 'json',
+            data : {"page" : page, "sort" : sortWay},
+            url : '/community',
+            success : function(posts) {
+                console.log(posts);
+                for(var i=0; i<posts.length; i++)
+                {
+                    var div =
+                            "<div class='item'>" +
+                                "<div class='content'>" +
+                                    "<a href='/community/" + posts[i].no + "'>" +
+                                        "<img src='../" + posts[i].image + "'>" +
+                                        "<div class='text-area'>" +
+                                            "<div class='title'>" + posts[i].title + "</div>" +
+                                            "<div class='row'>" +
+                                                "<div class='col-sm-10 info'> <span class='id'>" + posts[i].author + "&nbsp&nbsp&nbsp&nbsp&nbsp</span><span class='created'>" + posts[i].created + "</span></div>" +
+                                            "</div>" +
+                                        "</div>" +
+                                    "</a>" +
+                                "</div>" +
+                            "</div>";
+                    $("#list").append(div);
+                }
+                // DB를 다 불러온뒤 이미지 사이즈 크기별로 조절
+                console.log("DB 불러오기 완료.");
+                let allItems = document.getElementsByClassName('item');
+                for(var x=0; x<allItems.length;x++)
+                    imagesLoaded(allItems[x], resizeInstance);
+            },
+            error:function(e){
+                if(e.status==300){
+                    alert("데이터를 가져오는데 실패하였습니다.");
+                };
+            }
+        });
+    }
+</script>
+
+<link href="../public/stylesheets/community.css" rel="stylesheet" type="text/css">
+
+<div class="container-fluid">
+    <div class="intro">
+        여러분은 어떤 하루를 보냈나요
+        <span class="text-style-1">?</span>
+    </div>
+
+    <div class="sort" >
+        <select class="select-box" name="sort">
+            <option></option>
+            <%if(sort == 0) {%>
+            <option selected value="0">최신순</option>
+            <option value="1">좋아요순</option>
+            <%}else{%>
+                <option value="0">최신순</option>
+                <option selected value="1">좋아요순</option>
+            <%}%>
+        </select>
+    </div>
+
+    <div id="list">
+        <!--
+        <div class="item">
+            <div class="content">
+                <a href="/community/<%=100%>">
+                    <img src="//s3-us-west-2.amazonaws.com/s.cdpn.io/4273/mulan_2.jpg">
+                    <div class="text-area">
+                        <div class="title">제목이 작성됩니다.제목이…</div>
+                        <div class="row">
+                            <div class="col-sm-2">김소망</div>
+                            <div class="col-sm-7">2020-12-12 15:30</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="content">
+                <img src="//s3-us-west-2.amazonaws.com/s.cdpn.io/4273/rapunzel.jpg">
+                <div class="text-area">
+                    <div class="title">제목이 작성됩니다.제목이…</div>
+                    <div class="row">
+                        <div class="col-sm-2">김소망</div>
+                        <div class="col-sm-7">2020-12-12 15:30</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="content">
+                <img src="//s3-us-west-2.amazonaws.com/s.cdpn.io/4273/cinderella.jpg">
+                <div class="text-area">
+                    <div class="title">제목이 작성됩니다.제목이…</div>
+                    <div class="row">
+                        <div class="col-sm-2">김소망</div>
+                        <div class="col-sm-7">2020-12-12 15:30</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="content">
+                <img src="https://img1.daumcdn.net/thumb/R720x0.q80/?scode=mtistory2&fname=http%3A%2F%2Fcfile29.uf.tistory.com%2Fimage%2F1450B43350C7E9F83841FE">
+                <div class="text-area">
+                    <div class="title">제목이 작성됩니다.제목이…</div>
+                    <div class="row">
+                        <div class="col-sm-2">김소망</div>
+                        <div class="col-sm-7">2020-12-12 15:30</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="content">
+                <img src="https://lh3.googleusercontent.com/wnbhKmWZ4BEP31NrXBMSRIf0sinapcp4tuBM6JJNYA2DuXJHPTT2G5nw7GXaFGTemasIjb3T-CpswlgyDCVuF8AMnOHNWE_P666yn1c=w0">
+                <div class="text-area">
+                    <div class="title">제목이 작성됩니다.제목이…</div>
+                    <div class="row">
+                        <div class="col-sm-2">김소망</div>
+                        <div class="col-sm-7">2020-12-12 15:30</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="content">
+                <img src="//s3-us-west-2.amazonaws.com/s.cdpn.io/4273/belle.jpg">
+                <div class="text-area">
+                    <div class="title">제목이 작성됩니다.제목이…</div>
+                    <div class="row">
+                        <div class="col-sm-2">김소망</div>
+                        <div class="col-sm-7">2020-12-12 15:30</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="content">
+                <img src="//s3-us-west-2.amazonaws.com/s.cdpn.io/4273/sleeping-beauty.jpg">
+                <div class="text-area">
+                    <div class="title">제목이 작성됩니다.제목이…</div>
+                    <div class="row">
+                        <div class="col-sm-2">김소망</div>
+                        <div class="col-sm-7">2020-12-12 15:30</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="content">
+                <img src="../public/book.jpg">
+                <div class="text-area">
+                    <div class="title">제목이 작성됩니다.제목이…</div>
+                    <div class="row">
+                        <div class="col-sm-2">김소망</div>
+                        <div class="col-sm-7">2020-12-12 15:30</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        -->
+    </div>
+</div>
+
+<script>
+    SelectBox("sort",true);
+</script>

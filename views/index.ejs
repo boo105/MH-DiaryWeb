@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+
+<head>
+    <!-- 외부 플러그인을 이용하기 위한 설정 -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <!-- 플러그인 Import -->
+    <link rel="stylesheet" href="./public/javascripts/fullpage.min.css" />
+    <script src="./public/javascripts/fullpage.min.js"></script>
+</head>
+    <link rel="stylesheet" href="./public/javascripts/fullpage.min.css" />
+    <script src="./public/javascripts/fullpage.min.js"></script>
+</head>
+<style>
+    h1, h2 {
+        font-size: 26px;
+        text-align: center;
+        color: white;
+        margin-bottom: 1vh;
+    }
+    h2 { margin-bottom: 20vh; }
+
+    #goToLogin, #goToDiary {
+        text-decoration: None;
+        color: white;
+        font-size: 16px;
+        margin-top: 2vh;
+        margin-bottom: 20vh;
+    }
+    #goToLogin:hover, #goToDiary:hover {
+        font-weight: bold;
+        color: rebeccapurple;
+    }
+
+    .fp-tableCell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
+<body>
+    <div id="full-page">
+        <div class="section s0">
+            <% if(pass==true) {%>
+                <h1><span style="font-weight: bold;"><%= user %></span>님</h1>
+                <h2>오늘 하루는 어땠나요?</h2>
+            <% } else {%>
+                <h1>반가워요.</h1>
+                <h2>오늘 하루는 어땠나요?</h2>
+            <% }%>
+        </div>
+
+        <div class="section s1">
+            <h2><span style="font-weight: bold;">My DailyDiary</span>
+                는 편리한 일기작성 서비스를 제공합니다.
+            </h2>
+        </div>
+
+        <div class="section s2">
+            <h2><span style="font-weight: bold;">My DailyDiary</span>
+                와 함께 하루를 기록하러 갈까요?
+            </h2>
+        </div>
+
+        <div class="section s3">
+            <% if(pass==true) {%>
+                <h1>오늘의 일기를 작성해 주세요!</h1>
+                <a id="goToDiary" href="/user/myDiary">일기 작성하러 가기</a>
+            <% } else {%>
+                <h1>로그인 후 이용해 주세요</h1>
+                <a id="goToLogin" href="/signin">로그인 하러 가기</a>
+            <% }%>
+        </div>
+    </div>
+</div>
+
+<script>
+    new fullpage('#full-page', {
+        licenseKey: '',
+        navigation: true,
+        navigationTooltips: ['Home', 'Info', 'Slogan', 'Next'],
+        scrollingSpeed: 2000,
+        autoScrolling: true,
+    });
+</script>
+</body>
+
+</html>

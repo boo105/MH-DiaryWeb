@@ -1,0 +1,149 @@
+body { margin: 0px auto; }
+
+#firstCover { background-image: url("../images/coverImage1.png"); }
+#secondCover { background-image: url("../images/coverImage2.png"); }
+#thridCover { background-image: url("../images/coverImage3.png"); }
+
+
+#flipbook {
+    background-color: rgba(32,32,32, 0.5);
+}
+
+.hard {
+    background-image: url("../images/coverImage1.png");
+    background-size: 100% 100%;
+    border-radius: 4px;
+}
+
+.page {
+    background-color: white;
+    border: 1px solid #707070;
+    border-radius: 8px;
+}
+
+#galleryImage {
+    background-color: #f8f8f8;
+    margin: 1vh 1vh 2vh 1vh;
+    padding-top: 10px;
+    height: 30vh;
+}
+#gallery_img {
+    display: block;
+    margin: 0px auto;
+    height: 100%;
+    max-width: 100%;
+}
+#galleryTitle {
+    text-align: left;
+    margin-left: 12px;"
+font-weight: bold;
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+#galleryContent {
+    font-size: 18px;
+
+    text-align: left;
+    margin-left: 14px;
+    line-height: 2vh;
+}
+
+#bottomItem {
+    margin-bottom: 2vh;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+#galleryDate {
+    font-size: 18px;
+    color: #8e8e8e;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+button {
+    color: white;
+    background-color: #202020;
+    border-radius: 6px;
+    width: 120px;
+    height: 40px;
+}
+
+@import url('http://fonts.googleapis.com/earlyaccess/notosanskr.css');
+
+.title
+{
+    text-align: left;
+    font-size : 42px;
+    font-weight: 500;
+    color: #eeefff;
+    margin-bottom: 3vh;
+    font-family: 'Noto Sans KR', sans-serif;
+    margin-left: 25%;
+    margin-top: 90px;
+}
+
+.diary
+{
+    display: flex;
+    justify-content: center; !important;
+
+    width: 100%;
+}
+
+
+.happyRadio
+{
+    overflow: hidden;
+    height: 27px;
+}
+.happyRadio:after
+{
+    content: "";
+    display: block;
+    position: relative;
+    z-index: 10;
+    height: 27px;
+    background: url("../images/happy.png")repeat-x 0 0;
+    background-size: contain;
+    pointer-events: none;
+}
+.happyRadio__box
+{
+    position: relative;
+    z-index: 1;
+    float: left;
+    width: 13.5px;
+    height: 27px;
+}
+#happy_set
+{
+    position: absolute;
+    bottom: 12px;
+    right : 5px;
+}
+
+#happy_set input
+{
+    height: 0 ;
+    width: 0 ;
+    position: absolute;
+    opacity: 0  ;
+}
+
+.happyfill
+{
+    display: block;
+    position: absolute;
+    right: 0;
+    width: 500px;
+    height: 40px;
+    pointer-events: none;
+    background-color: #5c5cfe;
+}
+
+.padding
+{
+    padding : 0 20px 0 20px;
+}

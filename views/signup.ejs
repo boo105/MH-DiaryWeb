@@ -1,0 +1,179 @@
+<head>
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+
+    <!-- materialize -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="../public/stylesheets/signup.css" rel="stylesheet" type="text/css">
+</head>
+
+<script type="text/javascript">
+    $(document).ready(function (){
+        // 브라우저 기본값을 재정의
+        $('select').formSelect();
+    });
+
+    // script -> body
+    // $(function 으로 라이브러리가 로드된후에 실행되게 잡아줌
+    // 이벤트 실행시 해주는애들은 필요없
+    // 유효성 검사
+    $(function () {
+        // jquery 유효성검사는 기본적으로 숨겨진 필드에 대해 검사가 무시됨
+        // 숨겨진 필드에 대한 유효성 검사를 활성화 하는 코드 (Select 때문에 해줌)
+        $.validator.setDefaults({
+            ignore: []
+        });
+
+        $(".login-form").validate({
+            rules: {
+                id : {
+                    required: true,
+                    remote : {
+                        type:"POST",
+                        url:"/signup/idCheck",
+                        data:{ id : function (){
+                                return $('#id').val(); }}
+                    },
+                    minlength: 4
+                },
+                email : {
+                    required: true,
+                    email:true
+                },
+                pwd : {
+                    required: true,
+                    minlength: 5
+                },
+                pwdRe: {
+                    required: true,
+                    minlength: 5,
+                    equalTo: "#pwd"
+                },
+                name : {
+                    required : true
+                },
+                sex : {
+                    required : true
+                },
+                tel : {
+                    required : true
+                }
+            },
+            //For custom messages
+            messages: {
+                id :{
+                    required: "아이디를 입력해주세요.",
+                    minlength: "최소 4자리 이상을 입력해주세요.",
+                    remote : "중복된 아이디입니다."
+                },
+                email :{
+                    required : "이메일을 입력해주세요.",
+                    email : "유효한 이메일 주소를 입력하세요."
+                },
+                pwd : {
+                    required : "비밀번호를 입력해주세요.",
+                    minlength : "최소 5자리 이상을 입력해주세요."
+                },
+                pwdRe : {
+                    required : "비밀번호를 입력해주세요.",
+                    minlength : "최소 5자리 이상을 입력해주세요.",
+                    equalTo : "비밀번호가 일치하지 않습니다."
+                },
+                name : {
+                    required : "이름을 입력해주세요."
+                },
+                sex : {
+                    required : "성별을 선택해주세요."
+                },
+                tel : {
+                    required : "휴대전화를 입력해주세요."
+                }
+            },
+            errorElement : 'div',
+            errorPlacement: function(error, element) {
+                var placement = $(element).data('error');
+                if (placement) {
+                    $(placement).append(error)
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+    });
+</script>
+
+<div class="col s12 z-depth-4 card-panel" id="container-fluid">
+    <h5 style="text-align:center; font-weight: bold; color : rgb(47,47,130);">회 원 가 입</h5>
+    <form class="login-form" action="/signup" method="post">
+        <div class="row margin">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">account_circle</i>
+                <input id="id" name="id" type="text"/>
+                <label for="id">아이디</label>
+            </div>
+        </div>
+
+        <div class="row margin">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">vpn_key</i>
+                <input id="pwd" name="pwd" type="password" />
+                <label for="pwd">비밀번호</label>
+            </div>
+        </div>
+
+        <div class="row margin">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">vpn_key</i>
+                <input id="pwdRe" name="pwdRe" type="password" />
+                <label for="pwdRe">비밀번호 재확인</label>
+            </div>
+        </div>
+
+        <div class="row margin">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">account_circle</i>
+                <input id="name" name="name" type="text"/>
+                <label for="name">이름</label>
+            </div>
+        </div>
+
+        <div class="row margin">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">wc</i>
+                <select name="sex" id="sex" required>
+                    <option value="" disabled selected>선택안함</option>
+                    <option value="M">남자</option>
+                    <option value="F">여자</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row margin">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">email</i>
+                <input id="email" name="email" type="text" style="cursor: auto;" />
+                <label for="email">이메일</label>
+            </div>
+        </div>
+
+        <div class="row margin">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">tty</i>
+                <input id="tel" name="tel" type="text" style="cursor: auto;" />
+                <label for="tel">휴대전화</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s12">
+                <button type="submit" class="btn waves-effect waves-light col s12" id="submit">회원가입</button>
+            </div>
+            <div class="input-field col s12">
+                <p class="margin center medium-small sign-up">계정을 가지고 계십니까? <a href="./signin" style="color : #5c5cfe;">로그인</a></p>
+            </div>
+        </div>
+    </form>
+</div>

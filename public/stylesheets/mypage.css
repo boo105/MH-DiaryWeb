@@ -1,0 +1,110 @@
+body{
+    display: table-cell;
+    vertical-align: middle;
+    background-image: url("../images/background_sign.png");
+    background-size: 100%;
+    background-attachment: fixed;
+}
+
+html {
+    display: table;
+    margin: auto;
+}
+
+html, body {
+    height: 100%;
+}
+
+.medium-small {
+    font-size: 0.9rem;
+    margin: 0;
+    padding: 0;
+}
+
+.login-form {
+    width: 560px;
+}
+
+.login-form-text {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.8rem;
+}
+
+.login-text {
+    margin-top: -6px;
+    margin-left: -6px !important;
+}
+
+.margin {
+    margin: 0 !important;
+}
+
+.pointer-events {
+    pointer-events: auto !important;
+}
+
+.input-field >.material-icons  {
+    padding-top:10px;
+}
+
+div.error{
+    font-size: 0.8rem;
+    color:#FF4081;
+    margin-top : 8px;
+}
+#container-fluid {
+    position: relative;
+}
+.card-panel
+{
+    width : 625px;
+    padding: 24px 50px 24px 50px; !important;
+}
+#rePass {
+    display: none;
+}
+.btn {
+    background-color: #5c5cfe;
+}
+.btn:hover {
+    background-color: #483D8B;
+}
+.btn:focus {
+    background-color: #483D8B;
+}
+
+/*     메인페이지 복귀 버튼    */
+#back-btn {
+    position: absolute;
+    right: 0;
+    top: -40px;
+}
+.btn-style-1:hover {
+    background-color: #8572EE;
+}
+
+.btn-style-1:focus {
+    background-color: #C1AEEE;
+}
+
+.btn-style-1 {
+    border: none;
+    background-color: transparent;
+    height: 24px;
+    width: 190px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    color: #ffffff;
+}
+
+.title
+{
+    font-weight: bold;
+    text-align: center;
+    font-size : 30px;
+    color : rgb(47,47,130);
+}
+

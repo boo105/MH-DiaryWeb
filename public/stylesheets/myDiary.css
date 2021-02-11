@@ -1,0 +1,71 @@
+#calendar {
+    width: 100%;
+    height: 65vh;
+
+    margin-top: 90px;
+}
+
+#calendarView, #dailyView {
+    margin: 0px 3px 0 3px;
+
+    background-color: white;
+    height: 60vh;
+
+    border: 1px solid floralwhite;
+    border-radius: 10px;
+
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: 5px 5px 5px grey;
+}
+
+button {
+    color: white;
+    background-color: #202020;
+    border-radius: 6px;
+    margin: 10px;
+    width: 100%;
+}
+
+button:hover {
+    color: lightgrey;
+}
+
+#myChart
+{
+    padding: 5vh 50px 5vh 50px;
+}
+
+@import url('http://fonts.googleapis.com/earlyaccess/notosanskr.css');
+
+#daily
+{
+    font-family: 'Noto Sans KR', sans-serif;
+    color : #5c5cfe;
+}
+
+#login
+{
+    height: 5vh;
+    background-color : rgb(168,168,254);
+    border: none;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+}
+
+#login:hover
+{
+    outline: none;
+}
+#login:focus
+{
+    outline: none;
+}
+
+.diaryContent
+{
+    margin-top: 3vh;
+}

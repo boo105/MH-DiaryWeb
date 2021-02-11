@@ -1,0 +1,154 @@
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="../public/stylesheets/signin.css" rel="stylesheet" type="text/css">
+
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- 카카오 -->
+    <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+    <!-- 키 값이 노출되면 안되는데 추후 사이트를 진짜로 도메인 걸게되면 파일로 관리해줄거임  -->
+    <script>Kakao.init("280e4ee9de2ff439013ad773851fe672"); console.log(Kakao.isInitialized());</script>
+</head>
+
+<script type="text/javascript">
+    $(function () {
+        $('#login').click(function (e) {
+            // 제출 취소
+            e.preventDefault();
+            // 로그인 정상적인지 검사
+            $.ajax({
+                type : 'post',
+                url : '/signin',
+                data : $('.login-form').serialize(),
+                success : function (data){
+                    console.log(data);
+                    // 실패시 에러 메세지 생성 및 출력
+                    if(data == false)
+                    {
+                        var error_exist = document.getElementsByClassName('error');
+
+                        // error 메세지가 없을때만 생성
+                        if(error_exist.length == 0)
+                        {
+                            var parents = document.getElementById('pwd');
+                            var error = document.createElement('div');
+                            var text = document.createTextNode("가입하지 않은 아이디이거나, 잘못된 비밀번호입니다.");
+                            error.appendChild(text);
+                            error.setAttribute("class", "error");
+                            parents.appendChild(error);
+                        }
+                    }
+                    else if(data === "exp")
+                        alert("유령회원 입니다! 추후 인증기능으로 본인확인을 해주세요!");
+                    else    // 로그인 성공
+                        window.location.href = '/index';
+                }
+            });
+        });
+
+        // 카카오 로그인 및 회원가입 처리
+        $('#kakao').click(function (e) {
+            Kakao.Auth.login({
+                success : (auth) => {
+                    Kakao.API.request({
+                        url:'/v2/user/me',
+                        success : function (res){
+                            var id = res.id;
+                            var email = res.kakao_account.email;
+                            var name = res.properties.nickname;
+                            $.ajax({
+                                type : 'post',
+                                url : '/signup/idCheck',
+                                data : {id : id},
+                                success : function (data)
+                                {
+                                    if(data == true)
+                                    {
+                                        var email = res.kakao_account.email;
+                                        var name = res.properties.nickname;
+                                        $.ajax({
+                                            type : 'post',
+                                            url : '/signup/sns',
+                                            data : {id : id, email : email, name : name},
+                                            success : function (data) {     // 회원가입 성공
+                                                window.location.href = '/';
+                                            }
+                                        })
+                                    }
+                                    else
+                                    {
+                                        // 로그인
+                                        $.ajax({
+                                            type : 'post',
+                                            url : '/signin/sns',
+                                            data : {id : id},
+                                            success : function (data) {
+                                                window.location.href = '/index';
+                                            }
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                    });
+                },
+                fail : (err) => {
+                    console.error(err);
+                }
+            });
+        });
+    });
+</script>
+
+<div class="col s12 z-depth-4 card-panel">
+    <form class="login-form" >
+        <div class="row">
+            <div class="input-field col s12 center">
+                <!-- <img src="images/login-logo.png" alt="" class="circle responsive-img valign profile-image-login"/> -->
+                <p class="center login-form-text">Login</p>
+            </div>
+        </div>
+        <div class="row margin">
+            <div class="input-field col s12">
+                <!-- <i class="mdi-social-person-outline prefix"></i> -->
+                <i class="material-icons prefix">account_circle</i>
+                <input id="username" name="username" type="text" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=&quot;); cursor: auto;"/>
+                <label for="username" data-error="wrong" class="center-align" data-success="right">아이디</label>
+            </div>
+        </div>
+        <div class="row margin" id="pwd">
+            <div class="input-field col s12">
+                <!-- <i class="mdi-action-lock-outline prefix"></i> -->
+                <i class="material-icons prefix">vpn_key</i>
+                <input id="password" name="password" type="password" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=&quot;);"/>
+                <label for="password">비밀번호</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s12">
+                <button type="submit" class="btn waves-effect waves-light col s12 color" id="login">로그인</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s12">
+                <a href="<%=api_url%>" class="btn waves-effect waves-light col s12 green lighten-1" id="naver">네이버</a>
+            </div>
+            <div class="input-field col s12">
+                <!-- <a type="" id="kakao"><img width="280" src="./public/images/kakao_login_medium_wide.png"></a> -->
+                <a type="" class="btn waves-effect waves-light col s12 yellow lighten-1" id="kakao" src="./public/images/kakao_login_medium_wide.png">카카오</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s6 m6 l6">
+                <p class="margin medium-small"><a href="/signup" style="color : #5c5cfe;">회원가입</a></p>
+            </div>
+
+        </div>
+    </form>
+</div>

@@ -1,0 +1,209 @@
+<link rel="stylesheet" type="text/css" href="/public/stylesheets/dd.css" />
+<link href="/public/stylesheets/post.css" rel="stylesheet" type="text/css">
+
+<script src="/public/javascripts/jquery.dd.js" type="text/javascript"></script>
+<script type="text/javascript" src="../public/javascripts/select.js"></script>
+
+<div id="container-post" class="row">
+  <span id="post-title">
+    <p class="tit1">오늘의 일기를 작성해볼까요</p>
+    <p class="tit2">?</p>
+  </span>
+  <div id="post-main">
+    <form id="frm1" action="/user/post" name="subCon" method="post" enctype="multipart/form-data" >
+      <div id="post-image"  >
+        <div id="contentView" >
+          <img id="card_image" class="card-img-top" src="../public/images/upload2-icon.png">
+          <input id="upload" type="button" onclick="upload_btn()"/>
+          <input id="imageFile" accept="image/*" type="file" name="image" onchange="Upload()"/>
+        </div>
+        <input type="text"id="title" name="title" maxlength="12" placeholder="제목을 입력하세요."/>
+        <div id="image_btn">
+          <div class="publicBox" >
+            <select  name="public">
+              <option></option>
+              <option selected value="0">비공개</option>
+              <option value="1">공개</option>
+            </select>
+          </div>
+          <div id="weatherBox" >
+            <select id="weather" class="custom_dd" name="weather">
+              <option selected data-image='../public/images/sun.png' value="sun"></option>
+              <option data-image='../public/images/normal.png'       value="normal"></option>
+              <option data-image='../public/images/rain.png'         value="rain"></option>
+              <option data-image='../public/images/snow.png'         value="snow"></option>
+              <option data-image='../public/images/cloud.png'        value="cloud"></option>
+            </select>
+          </div>
+          <div class="happyRadio" id="happy_set">
+            <label class="happyRadio__box">
+              <input type="radio" name="happy" value="0.5">
+              <span class="happyRadio__img"><span class="blind">별 0.5개</span></span>
+            </label>
+            <label class="happyRadio__box">
+              <input type="radio" name="happy" value="1.0">
+              <span class="happyRadio__img"><span class="blind">별 1.0개</span></span>
+            </label>
+            <label class="happyRadio__box">
+              <input type="radio" name="happy" value="1.5">
+              <span class="happyRadio__img"><span class="blind">별 1.5개</span></span>
+            </label>
+            <label class="happyRadio__box">
+              <input type="radio" name="happy" value="2.0">
+              <span class="happyRadio__img"><span class="blind">별 2.0개</span></span>
+            </label>
+            <label class="happyRadio__box">
+              <input type="radio" name="happy" value="2.5">
+              <span class="happyRadio__img"><span class="blind">별 2.0개</span></span>
+            </label>
+            <label class="happyRadio__box">
+              <input type="radio" name="happy" value="3.0">
+              <span class="happyRadio__img"><span class="blind">별 3.0개</span></span>
+            </label>
+            <label class="happyRadio__box">
+              <input type="radio" name="happy" value="3.5">
+              <span class="happyRadio__img"><span class="blind">별 3.5개</span></span>
+            </label>
+            <label class="happyRadio__box">
+              <input type="radio" name="happy" value="4.0">
+              <span class="happyRadio__img"><span class="blind">별 4.0개</span></span>
+            </label>
+            <label class="happyRadio__box">
+              <input type="radio" name="happy" value="4.5">
+              <span class="happyRadio__img"><span class="blind">별 4.5개</span></span>
+            </label>
+            <label class="happyRadio__box">
+              <input type="radio" name="happy" value="5.0">
+              <span class="happyRadio__img"><span class="blind">별 5.0개</span></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div id="count_div">
+        <span id="count">0</span>
+        <p class="ctn-num" > / 300</p>
+      </div>
+      <div id="post-content" >
+        <textarea id="content" class="textArea" name="content" maxlength="300" onkeyup="counter(this)" placeholder=" 일기내용"></textarea>
+        <div>
+          <input id="happiness" name="happiness" value="3.0"/>
+          <input id="author" name="author" value="<%=postID%>" />
+          <input id="end" value="<%=end%>"; />
+        </div>
+      </div>
+    </form>
+    <div id="content-btn">
+      <input id="btn_sub" type="button" class="submit-btn" onClick="PrivateBtn(happiness) " value="일기 저장" />
+    </div>
+  </div>
+</div>
+
+<script>
+  // 글 작성 여부
+  $(document).ready(function () {
+    end = document.getElementById('end').value;
+    if(end == '0') {
+      alert("이미 글 작성을 완료하셨습니다.");
+      location.href="myDiary";
+    }
+  }); 
+  // 날씨 이미지 노트북 버전 
+  $(function () {
+    if(screen.width < 1600 ) {
+      var chil = $('#weather');
+      chil.children().eq(0).attr('data-image', '../public/images/sun_s.png');
+      chil.children().eq(1).attr('data-image', '../public/images/normal_s.png');
+      chil.children().eq(2).attr('data-image', '../public/images/rain_s.png');
+      chil.children().eq(3).attr('data-image', '../public/images/snow_s.png');
+      chil.children().eq(4).attr('data-image', '../public/images/cloud_s.png');
+    }
+  });
+
+  // 셀렉트 디자인 변경
+  $(function () { $(".custom_dd").msDropDown();});
+  // 이미지 업로드
+  $(function () {
+    $('#btn-upload').click(function (e) {
+      e.preventDefault();
+      $('#imageFile').click();
+    });
+  });
+  function upload_btn() {
+    $('#imageFile').click();
+  }
+  // 이미지 출력 시 첫 번째는 Data가 비어서 넘어감
+  function Upload() {
+    ResizeImage();
+    ResizeImage();
+  }
+  // 이미지 뷰 사이즈 조절
+  function ResizeImage() {
+    var filesToUpload = document.getElementById('imageFile').files;
+    var file = filesToUpload[0];
+    // 문서내에 img 객체를 생성합니다
+    var img = document.createElement("img");
+
+    // 파일을 읽을 수 있는 File Reader 를 생성합니다
+    var reader = new FileReader();
+    // 파일이 읽혀지면 아래 함수가 실행됩니다
+    reader.onload = function(e) {
+      img.src = e.target.result;
+
+      // HTML5 canvas 객체를 생성합니다
+      var canvas = document.createElement("canvas");
+      var ctx = canvas.getContext("2d");
+      // 캔버스에 업로드된 이미지를 그려줍니다
+      ctx.drawImage(img, 0, 0);
+      // 최대폭을 400 으로 정했다고 가정했을때
+      // 최대폭을 넘어가는 경우 canvas 크기를 변경해 줍니다.
+
+      var MAX_WIDTH = 400;
+      var MAX_HEIGHT = 300;
+      var width = img.width;
+      var height = img.height;
+
+      width *= MAX_HEIGHT / height;
+      height = MAX_HEIGHT;
+      canvas.width = width;
+      canvas.height = height;
+
+      // canvas에 변경된 크기의 이미지를 다시 그려줍니다.
+      var ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, width, height);
+      // canvas 에 있는 이미지를 img 태그로 넣어줍니다
+      var dataurl = canvas.toDataURL("image/png");
+      document.getElementById('card_image').src = dataurl;
+    }
+    reader.readAsDataURL(file);
+  }
+
+  // 별점 기능
+  $(document).ready(function() {
+    $('#happy a').click(function()
+    {
+      $(this).parent().children("a").removeClass("on");
+      $(this).addClass("on").prevAll("a").addClass("on");
+      console.log($(this).attr("value"));
+    });
+  });
+
+  // Submit,  public 선택 값 변경
+  function PrivateBtn(obj2) {
+    if ((document.getElementById('title').value.length) > 0) {
+      if ($('input[name=happy]:checked').val() != null)
+        obj2.value = $('input[name=happy]:checked').val();
+
+      document.getElementById("frm1").submit();
+    } else {
+      alert("제목을 입력해주세요.");
+    }
+  }
+  // 입력 내용 글자 수 표시
+  function counter(val) {
+    var len = val.value.length;
+    document.getElementById("count").textContent = len;
+  }
+  SelectBox("publicBox",false);
+  SelectBox("weatherBox",false);
+</script>
+
