@@ -1,7 +1,7 @@
 # MH-DiaryWeb
 
-# 웹페이지 구현환경
-node.js , express
+# 프로젝트 구현환경
+node.js , express, 
 
 
 # 맡았던 부분
